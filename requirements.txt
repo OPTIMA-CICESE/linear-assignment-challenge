@@ -1,0 +1,9 @@
+# Dependencias del juego.
+# Importante: se usa pygame-ce (fork mantenido); el paquete "pygame" original
+# no incluye el escalado por SDL que necesita el modo pantalla completa.
+pygame-ce>=2.5.0
+numpy>=1.24.0
+
+# Opcional: acelera la escritura de los archivos de audio. El juego tiene una
+# ruta alternativa en Python puro, asi que puede comentarse si no se instala.
+scipy>=1.10.0

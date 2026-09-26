@@ -1,0 +1,22 @@
+Fuente incluida en el juego
+==========================
+
+DejaVuSans.ttf
+--------------
+
+De: https://dejavu-fonts.github.io/
+Licencia: Bitstream Vera (permisiva, redistribuible). Los cambios de DejaVu
+son de dominio publico. El texto completo esta en:
+
+    /usr/share/doc/fonts-dejavu-core/copyright
+
+Por que va dentro del repo
+--------------------------
+El juego dibuja simbolos como check, cruz, flechas y triangulos. Si cada
+sistema operativo usara su fuente por defecto, en Windows (Arial) y en Linux
+(DejaVu) esos simbolos aparecerian o no segun el caso, y el emoji de color
+no existe en una fuente normal.
+
+Con esta fuente empaquetada, el texto se ve igual en cualquier PC y todos los
+simbolos que usa el juego estan garantizados. Un archivo de 742 KB que evita
+que el menu salga con cuadritos vacios.

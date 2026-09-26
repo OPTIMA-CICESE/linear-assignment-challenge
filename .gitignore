@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+.venv_win/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+
+# PyInstaller / AppImage
+build/
+build_win*/
+build_linux/
+dist/
+dist_win*/
+dist_linux/
+.cache/
+*.spec
+squashfs-root/
+
+# Binarios generados (nunca van al repo, se suben como Release)
+*.exe
+*.AppImage
+*.tar.gz
+*.zip
+*.pdb
+*.ilk
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+*~
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Entorno y logs
+.env
+*.log
+wget-log
+
+# Archivos locales
+lap.zip
