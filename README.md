@@ -202,9 +202,9 @@ resultados.
 
 ## Con el apoyo de
 
-<img src="assets/logos/OPTIMA2-N.png" alt="OPTIMA" width="110"/>
-<img src="assets/logos/logo-cicese.png" alt="CICESE" width="200"/>
-<img src="assets/logos/iee.png" alt="IEEE" width="200"/>
+<img src="assets/logos/readme/OPTIMA.png" alt="OPTIMA" height="56" style="background:#ffffff; border-radius:8px; padding:8px 10px; margin:2px; vertical-align:middle;"/>
+<img src="assets/logos/readme/CICESE.png" alt="CICESE" height="56" style="background:#ffffff; border-radius:8px; padding:8px 10px; margin:2px; vertical-align:middle;"/>
+<img src="assets/logos/readme/IEEE.png" alt="IEEE" height="56" style="background:#ffffff; border-radius:8px; padding:8px 10px; margin:2px; vertical-align:middle;"/>
 
 ## Licencia
 
