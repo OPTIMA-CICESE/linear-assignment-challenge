@@ -773,9 +773,11 @@ class GameRenderer:
     
         # ── Gen counter (next to gears) ──────────────────
         if self.g.ai_ga and self.g.state not in (State.MENU, State.LEVEL_SELECT, State.TUTORIAL):
+            total = max(1, self.g.ai_total_steps)
+            gen = min(self.g.ai_ga.generation, self.g.ai_steps_done, total)
             gen_t = self._text(
                 self.g.font_xxs,
-                f"Gen: {self.g.ai_ga.generation}/{C.LEVELS[self.g.current_level]['ai_gen']}",
+                f"Gen: {gen}/{total}",
                 C.C_SUBTITLE,
             )
             surf.blit(gen_t, (60 + ox, 38 + oy))
