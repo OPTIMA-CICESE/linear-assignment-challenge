@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Genera assets/icon.png: icono de la app en pixel-art (16x16, escalado x16).
+"""Genera assets/icon.png y assets/icon.ico: icono de la app en pixel-art.
 
     python3 tools/make_icon.py
 
-No necesita pygame ni Pillow: el icono son rectangulos de color y el PNG se
-escribe a mano.
+El PNG (16x16, escalado x16) es el icono de ventana y de la AppImage; el ICO
+multi-tamano se incrusta en el ejecutable de Windows. No necesita pygame ni
+Pillow: el icono son rectangulos de color y los archivos se escriben a mano.
 """
 import os
 import struct
@@ -65,8 +66,8 @@ def escalar(px, lado, factor):
     return grande, out
 
 
-def escribir_png(ruta, px, lado):
-    """Escribe un PNG RGBA sin dependencias externas."""
+def png_bytes(px, lado):
+    """Codifica px (rejilla con tuplas RGBA) como PNG en memoria."""
     filas = bytearray()
     for y in range(lado):
         filas.append(0)                      # filtro "None"
@@ -84,11 +85,54 @@ def escribir_png(ruta, px, lado):
             f"pixeles {len(filas)}, se esperaban {esperado} para {lado}x{lado}")
 
     ihdr = struct.pack(">IIBBBBB", lado, lado, 8, 6, 0, 0, 0)
+    out = bytearray()
+    out += b"\x89PNG\r\n\x1a\n"
+    out += bloque(b"IHDR", ihdr)
+    out += bloque(b"IDAT", zlib.compress(bytes(filas), 9))
+    out += bloque(b"IEND", b"")
+    return bytes(out)
+
+
+def escribir_png(ruta, px, lado):
+    """Escribe un PNG RGBA sin dependencias externas."""
     with open(ruta, "wb") as fh:
-        fh.write(b"\x89PNG\r\n\x1a\n")
-        fh.write(bloque(b"IHDR", ihdr))
-        fh.write(bloque(b"IDAT", zlib.compress(bytes(filas), 9)))
-        fh.write(bloque(b"IEND", b""))
+        fh.write(png_bytes(px, lado))
+
+
+def escribir_ico(ruta, px_base, factor_base, tamanos=(16, 24, 32, 48, 64, 128, 256)):
+    """ICO multi-tamano (entries PNG, soportado por Windows Vista en adelante).
+
+    Reutiliza el diseno de 16x16: cada tamano se escala con vecino mas cercano
+    recortando la rejilla, sin depender de Pillow ni de pygame.
+    """
+    bloques = {}
+    for t in tamanos:
+        if t <= 16:
+            lado = 16
+            desplaz = (16 - t) // 2
+            rejilla = [fila[desplaz:desplaz + t] for fila in px_base]
+            rejilla = rejilla[desplaz:desplaz + t]
+        else:
+            lado = t
+            rejilla = [[px_base[y * 16 // t][x * 16 // t]
+                        for x in range(t)] for y in range(t)]
+        bloques[t] = png_bytes(rejilla, lado)
+
+    entradas = bytearray()
+    datos = bytearray()
+    desplazamiento_total = 6 + 16 * len(tamanos)
+    for t, blob in bloques.items():
+        entradas += struct.pack(
+            "<BBBBHHII", t if t < 256 else 0, t if t < 256 else 0,
+            0, 0, 1, 32, len(blob), desplazamiento_total)
+        datos += blob
+        desplazamiento_total += len(blob)
+
+    with open(ruta, "wb") as fh:
+        fh.write(struct.pack("<HHH", 0, 1, len(tamanos)))
+        fh.write(entradas)
+        fh.write(datos)
+    return sum(len(b) for b in bloques.values())
 
 
 def main():
@@ -100,6 +144,9 @@ def main():
     escribir_png(destino, px, lado)
     opacos = sum(1 for fila in px for c in fila if c[3])
     print(f"Escrito {destino} ({lado}x{lado}, {opacos} pixeles con color)")
+    ico = os.path.join(raiz, "assets", "icon.ico")
+    bytes_ico = escribir_ico(ico, px, ESCALA)
+    print(f"Escrito {ico} (multi-tamano, {bytes_ico} bytes de imagenes)")
 
 
 if __name__ == "__main__":
