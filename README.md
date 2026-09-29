@@ -4,11 +4,13 @@ Juego educativo de pixel-art que enseña el **Problema de Asignación Lineal** (
 El jugador repara computadoras asignando componentes, mientras compite contra
 **PC PLAYER**, un algoritmo genético que busca la mejor asignación en vivo.
 
-Proyecto del laboratorio [OPTIMA](https://www.cicese.edu.mx) para la Semana de Ciencias.
+Proyecto del laboratorio [OPTIMA](https://www.cicese.edu.mx) para la Noche de Ciencias.
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-4b8bbe)
 ![pygame](https://img.shields.io/badge/pygame--ce-4b8bbe)
 ![license](https://img.shields.io/badge/license-MIT-3cb371)
+
+![Demostración del juego](screenshots/preview.gif)
 
 ## El problema
 
@@ -19,9 +21,6 @@ determinante.
 - Cada computadora acepta **una sola** pieza.
 - Superar el 100 % desperdicia capacidad y penaliza el puntaje.
 - Gana quien deje más computadoras al 100 % con menos desperdicio.
-
-No es necesario conocer ecuaciones: toda la información se transmite mediante
-colores, barras, iconos y porcentajes.
 
 ## Requisitos
 
@@ -76,6 +75,14 @@ componente: si ya tiene pieza, el socket no acepta otra.
   momento, la ronda se decide inmediatamente, sin esperar a que el GA termine.
   El resultado indica si el jugador llegó antes, superó al algoritmo o si ambos
   encontraron la misma solución.
+
+## Capturas
+
+![Una ronda en curso: el jugador asigna componentes mientras PC PLAYER busca la mejor repartición](screenshots/gameplay.png)
+
+**PC PLAYER**, el algoritmo genético contra el que se compite:
+
+![PC PLAYER](assets/pcplayer.png)
 
 ## Modos de dificultad
 
@@ -169,18 +176,6 @@ script descarga sus herramientas a `.cache/` en la primera ejecución, por lo qu
 requiere `curl` y conexión a internet en esa ejecución. Para regenerar el icono:
 `python3 tools/make_icon.py`.
 
-## Pruebas
-
-```bash
-./run.sh --test        # equivalente a: python main.py --test
-```
-
-- `tests/test_core.py` — generador de problemas, puntuación y algoritmo genético.
-  Solo biblioteca estándar, sin pygame.
-- `tests/smoke_test.py` — ejecuta los cinco niveles de principio a fin de forma
-  automática, verifica el renderizado, comprueba la cobertura de la fuente
-  embebida y valida los modos de dificultad.
-
 ## Estructura
 
 ```
@@ -196,6 +191,12 @@ tests/       pruebas del núcleo y prueba de humo
 `core/` y `algorithm/` no importan pygame: son verificables por separado y
 aceptan una semilla aleatoria para reproducir exactamente los mismos
 resultados.
+
+## Con el apoyo de
+
+<img src="assets/logos/OPTIMA2-N.png" alt="OPTIMA" width="110"/>
+<img src="assets/logos/logo-cicese.png" alt="CICESE" width="200"/>
+<img src="assets/logos/iee.png" alt="IEEE" width="200"/>
 
 ## Licencia
 
