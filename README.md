@@ -127,6 +127,10 @@ Alternativamente, la compilación puede ejecutarse desde GitHub Actions:
    como `v1.0.0`).
 3. Al finalizar, descargar `PCRepairChallenge-windows` y descomprimir el `.exe`.
 
+Al publicar una etiqueta `v*`, los flujos **Windows** y **Linux** compilan en
+GitHub y adjuntan el `.exe`, la AppImage y el paquete `.tar.gz` a la página de
+**Releases** del repositorio.
+
 El `.exe` no requiere Python ni ninguna instalación adicional en el equipo
 destino.
 
@@ -143,6 +147,10 @@ dist/
 ```bash
 ./build_appimage.sh
 ```
+
+También puede compilarse desde la pestaña **Actions** con el flujo **Linux**;
+al publicar una etiqueta `v*` la AppImage y el paquete se adjuntan al mismo
+Release que el `.exe`.
 
 Genera los archivos en `dist/linux/`:
 
