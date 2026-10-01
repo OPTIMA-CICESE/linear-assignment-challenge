@@ -99,54 +99,61 @@ def escribir_png(ruta, px, lado):
         fh.write(png_bytes(px, lado))
 
 
-def escribir_ico(ruta, px_base, factor_base, tamanos=(16, 24, 32, 48, 64, 128, 256)):
-    """ICO multi-tamano (entries PNG, soportado por Windows Vista en adelante).
+def _bmp_bgra(px, size):
+    """Bloque BITMAPINFOHEADER + XOR (BGRA) + AND para una entrada de ICO."""
+    cabecera = struct.pack(
+        "<IiiHHIIiiII", 40, size, size * 2, 1, 32, 0, size * size * 4, 0, 0, 0, 0)
+    datos = bytearray()
+    for y in range(size - 1, -1, -1):   # filas de abajo hacia arriba
+        for x in range(size):
+            r, g, b, a = px[y][x]
+            datos += bytes((b, g, r, a))
+    fila_and = ((size + 31) // 32) * 4
+    return cabecera + bytes(datos) + b"\x00" * (fila_and * size)
 
-    Reutiliza el diseno de 16x16: cada tamano se escala con vecino mas cercano
-    recortando la rejilla, sin depender de Pillow ni de pygame.
+
+def _rejilla(base, size):
+    """Rejilla size x size con vecino mas cercano desde el diseno de 16x16."""
+    return [[base[y * 16 // size][x * 16 // size]
+             for x in range(size)] for y in range(size)]
+
+
+def escribir_ico(ruta, px_base, tamanos=(16, 24, 32, 48, 64)):
+    """ICO multi-tamano clasico (entradas BMP), soportado por todos los parsers.
+
+    PyInstaller y Windows leen BMP sin problemas; se evitan las entradas PNG,
+    que no todos los empaquetadores aceptan.
     """
-    bloques = {}
-    for t in tamanos:
-        if t <= 16:
-            lado = 16
-            desplaz = (16 - t) // 2
-            rejilla = [fila[desplaz:desplaz + t] for fila in px_base]
-            rejilla = rejilla[desplaz:desplaz + t]
-        else:
-            lado = t
-            rejilla = [[px_base[y * 16 // t][x * 16 // t]
-                        for x in range(t)] for y in range(t)]
-        bloques[t] = png_bytes(rejilla, lado)
-
+    encabezado = struct.pack("<HHH", 0, 1, len(tamanos))
     entradas = bytearray()
     datos = bytearray()
-    desplazamiento_total = 6 + 16 * len(tamanos)
-    for t, blob in bloques.items():
-        entradas += struct.pack(
-            "<BBBBHHII", t if t < 256 else 0, t if t < 256 else 0,
-            0, 0, 1, 32, len(blob), desplazamiento_total)
+    offset = 6 + 16 * len(tamanos)
+    total = 0
+    for t in tamanos:
+        blob = _bmp_bgra(_rejilla(px_base, t), t)
+        entradas += struct.pack("<BBBBHHII", t, t, 0, 0, 1, 32, len(blob), offset)
         datos += blob
-        desplazamiento_total += len(blob)
-
+        offset += len(blob)
+        total += len(blob)
     with open(ruta, "wb") as fh:
-        fh.write(struct.pack("<HHH", 0, 1, len(tamanos)))
+        fh.write(encabezado)
         fh.write(entradas)
         fh.write(datos)
-    return sum(len(b) for b in bloques.values())
+    return total
 
 
 def main():
-    px = lienzo()
-    dibujar(px)
-    lado, px = escalar(px, LADO, ESCALA)
+    base = lienzo()
+    dibujar(base)
+    lado, px = escalar(base, LADO, ESCALA)
     raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     destino = os.path.join(raiz, "assets", "icon.png")
     escribir_png(destino, px, lado)
     opacos = sum(1 for fila in px for c in fila if c[3])
     print(f"Escrito {destino} ({lado}x{lado}, {opacos} pixeles con color)")
     ico = os.path.join(raiz, "assets", "icon.ico")
-    bytes_ico = escribir_ico(ico, px, ESCALA)
-    print(f"Escrito {ico} (multi-tamano, {bytes_ico} bytes de imagenes)")
+    bytes_ico = escribir_ico(ico, base)
+    print(f"Escrito {ico} (multi-tamano BMP, {bytes_ico} bytes de imagenes)")
 
 
 if __name__ == "__main__":
