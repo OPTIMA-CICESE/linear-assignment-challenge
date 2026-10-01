@@ -87,8 +87,7 @@ componente: si ya tiene pieza, el socket no acepta otra.
 ## Modos de dificultad
 
 El modo por defecto es **Normal**. En *Ajustes* se pueden elegir los cuatro, y
-la tecla `G` alterna al instante entre **Ultra fácil** y **Normal** (funciona en
-cualquier pantalla, incluso con la ronda en marcha).
+la tecla `G` alterna al instante entre **Ultra fácil** y **Normal**.
 
 | Modo | Población | Generaciones | Tiempo |
 |---|---|---|---|
@@ -97,19 +96,6 @@ cualquier pantalla, incluso con la ronda en marcha).
 | Normal | 100 % | 100 % | 100 % |
 | Difícil | 125 % | 130 % | 60 % |
 
-El modo no proporciona al algoritmo una solución prefabricada: la búsqueda
-continúa con recursos mucho menores. En el nivel 5 el GA alcanza el 92 % del
-óptimo en el modo ultra fácil y el 93 % en el modo normal, de modo que un
-jugador que asigna correctamente puede ganar en ambos casos.
-
-Si el modo cambia mientras la ronda está en curso, el GA reduce su población y
-su número de generaciones, y el tiempo restante se reescala en proporción. El
-botón de deshacer, el tutorial y el resto de los controles no se modifican.
-
-`tests/smoke_test.py` comprueba que la dificultad se inicialice en Normal, que
-la tecla `G` alterne entre ambos modos, que los modos estén ordenados por
-dificultad y que alcanzar la mejor solución antes que el GA cierre la ronda con
-victoria.
 
 ## Ejecutable para Windows
 
@@ -118,18 +104,6 @@ El ejecutable de Windows requiere un equipo con Windows y Python instalado:
 ```bat
 build_windows.bat
 ```
-
-Alternativamente, la compilación puede ejecutarse desde GitHub Actions:
-
-1. Publicar el proyecto en el repositorio.
-2. Abrir la pestaña **Actions**, seleccionar el flujo **Windows** y ejecutar
-   *Run workflow* (también se ejecuta automáticamente al publicar una etiqueta
-   como `v1.0.0`).
-3. Al finalizar, descargar `PCRepairChallenge-windows` y descomprimir el `.exe`.
-
-Al publicar una etiqueta `v*`, los flujos **Windows** y **Linux** compilan en
-GitHub y adjuntan el `.exe`, la AppImage y el paquete `.tar.gz` a la página de
-**Releases** del repositorio.
 
 El `.exe` no requiere Python ni ninguna instalación adicional en el equipo
 destino.
@@ -193,7 +167,7 @@ game/        motor, estados, renderizado y tutorial
 assets/      sprites de pixel-art y logos
 ui/          efectos de pantalla: partículas, transiciones
 audio/       música y efectos sintetizados
-tests/       pruebas del núcleo y prueba de humo
+tests/       pruebas del juego
 ```
 
 `core/` y `algorithm/` no importan pygame: son verificables por separado y
