@@ -67,7 +67,7 @@ Se puede asignar una pieza arrastrándola hasta la computadora, o seleccionándo
 y eligiendo la computadora con el teclado. Cada computadora admite un único
 componente: si ya tiene pieza, el socket no acepta otra.
 
-## Quién gana
+## ¿Quién gana?
 
 - Gana quien termine con mayor puntaje.
 - **Si el jugador alcanza la misma solución que el algoritmo, también gana.**
