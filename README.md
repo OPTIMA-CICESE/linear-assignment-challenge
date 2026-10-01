@@ -2,7 +2,7 @@
 
 Juego educativo de pixel-art que enseña el **Problema de Asignación Lineal** (LAP).
 El jugador repara computadoras asignando componentes, mientras compite contra
-**PC PLAYER**, un algoritmo genético que busca la mejor asignación en vivo.
+un algoritmo genético..
 
 Proyecto del laboratorio [OPTIMA](https://www.cicese.edu.mx) para la Noche de Ciencias.
 
